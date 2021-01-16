@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>excel</title>
+</head>
+<body>
+    <header>
+        <div class="header-contents">
+            <div class="menu">menu</div>
+            <div class="menu-options">menu-options</div>
+            <div class="formula">formula</div>
+        </div>
+    </header>
+    <div class="cells">
+        <% for(let i=0;i<100;i++) {  %>
+            <div class="row">
+                <% for(let j=0;j<26;j++) { %>
+                    <div class="cell" contenteditable="true" r-id=<%= i %> c-id = <%= j%> ></div>
+                    <% } %>
+            </div>
+            <% } %>
+    </div>
+    <footer>
+        <div class="footer">footer</div>
+    </footer>
+<script src="./script.js"></script>
+</body>
+</html>
