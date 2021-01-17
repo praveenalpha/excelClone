@@ -1,14 +1,8 @@
 const $ = require('jquery');
 
-// $(document).on("click",".cell", function () {
-//     var clickedBtnID = $(this).attr('class'); // or var clickedBtnID = this.id
-//     alert('you clicked on button #' + clickedBtnID);
-//     console.log(this);
-// });
-
-$(document).ready(function(){
-    console.log("jsjs");
-    $('.cell').click( () => {
-        console.log(this);
-    })    
+$(document).on("click",".cell", function () {
+    let row = $(this).attr('r-id');
+    let col = Number($(this).attr('c-id')) + Number(65);
+    let res = String.fromCharCode(col);
+    $('.address').val(res+row);
 });
