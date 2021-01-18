@@ -3,7 +3,14 @@ function getRowIDColID(element){
     let row = element.charCodeAt(0) - 65;
     let col = element.charCodeAt(1) - 49;
     // let arr = [1,2,3,4];
-    console.log(row,col);
+    let x = 10;
+    let y = 20;
+    let z = eval('( x + y )');
+    return {
+        row:10,
+        col:20
+    }
 }
-getRowIDColID("A1");
+let{col,row} = getRowIDColID("A1");
+console.log(row,col);
 

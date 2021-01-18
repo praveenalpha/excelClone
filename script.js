@@ -2,7 +2,7 @@ const $ = require('jquery');
 
 //initialise DB
 let db=[];
-let lastClickedCell = [];
+let lastClickedCell;
 for(let i=0;i<100;i++){
     let row=[];
     for(let j=0;j<26;j++){
@@ -21,26 +21,27 @@ for(let i=0;i<100;i++){
 $(document).ready(function() {
     //on click cell
     $('.cell').click(function(){
-        // console.log(db);
         let row = Number($(this).attr('r-id'));
         let col = Number($(this).attr('c-id')) + Number(65);
         let res = String.fromCharCode(col);
         $('.addressBar').val(res+String(row));
         col -= 65;
-        lastClickedCell = {row, col};
+        lastClickedCell = this;
         if(db[row][col].formula){
             $('.input-formula').val(db[row][col].formula);
         }
         else{
             $('.input-formula').val("");
         }
+        // console.log(db);
     })
     //on blur cell
     $('.cell').on('blur', function(){
         let row = $(this).attr('r-id');
         let col = $(this).attr('c-id');
         let value = $(this).text();
-        db[row][col].val = value;
+        if(value)
+            db[row][col].val = value;
         // console.log(db);
     })
     //input formula
@@ -51,17 +52,27 @@ $(document).ready(function() {
             // let ans = fcomps.length;
             // console.log(ans);
             for(let i=0;i<fcomps.length;i++){
+                // let x,y;
                 if(fcomps[i].length == 2){
                     let {row , col } = getRowIDColID(fcomps[i]);
                     fcomps[i] = db[row][col].val;
-                    console.log(row,col);
+                    // console.log(fcomps[i]);
                 }
             }
-            console.log(fcomps);
+            let a = "";
+            for(let i=0;i<fcomps.length;i++){
+                a+=fcomps[i];
+            }
+            let z = eval(a);
+            let element = "";
+            element += String.fromCharCode(Number($(lastClickedCell).attr('c-id')) + 65);
+            element += String(Number($(lastClickedCell).attr('r-id')) + 1);
             
-            db[lastClickedCell.row][lastClickedCell.col].formula=formulaValue;
-
-            // console.log(db);
+            let {row,col} = getRowIDColID(element);
+            console.log(row,col);
+            db[row][col].formula=formulaValue;
+            db[row][col].val = z;
+            $(lastClickedCell).html(z);
         }
     })
 })
