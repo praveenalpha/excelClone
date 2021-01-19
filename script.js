@@ -10,7 +10,9 @@ for(let i=0;i<100;i++){
         let obj = {
             name: Name,
             val: "",
-            formula: ""
+            formula: "",
+            parents: [],
+            children:[]
         }
         row.push(obj);
     }
@@ -46,37 +48,50 @@ $(document).ready(function() {
     })
     //input formula
     $('.input-formula').blur(function(){
-        let formulaValue = $('.input-formula').val();
-        if(formulaValue){
-            fcomps = formulaValue.split(" ");
-            // let ans = fcomps.length;
-            // console.log(ans);
-            for(let i=0;i<fcomps.length;i++){
-                // let x,y;
-                if(fcomps[i].length == 2){
-                    let {row , col } = getRowIDColID(fcomps[i]);
-                    fcomps[i] = db[row][col].val;
-                    // console.log(fcomps[i]);
-                }
-            }
-            let a = "";
-            for(let i=0;i<fcomps.length;i++){
-                a+=fcomps[i];
-            }
-            let z = eval(a);
-            let element = "";
-            element += String.fromCharCode(Number($(lastClickedCell).attr('c-id')) + 65);
-            element += String(Number($(lastClickedCell).attr('r-id')) + 1);
-            
-            let {row,col} = getRowIDColID(element);
-            console.log(row,col);
-            db[row][col].formula=formulaValue;
-            db[row][col].val = z;
-            $(lastClickedCell).html(z);
-        }
+        calculateFormula();
     })
 })
+function calculateFormula(){
+    let formulaValue = $('.input-formula').val();
+    let lsc = String.fromCharCode(Number($(lastClickedCell).attr('c-id')) + 65);
+    lsc += String(Number($(lastClickedCell).attr('r-id')) + 1);
+    if(formulaValue){
+        fcomps = formulaValue.split(" ");
+        for(let i=0;i<fcomps.length;i++){
+            if(fcomps[i].length == 2){
+                if(fcomps[i][0] >= 'A' && fcomps[i][0] <= 'Z'){
+                    let {row , col } = getRowIDColID(fcomps[i]);
+                    let temp = getRowIDColID(lsc);
+                    if(!db[row][col].children.includes(lsc)){
+                        db[row][col].children.push(lsc);
 
+                    }
+                    // console.log(col);
+                    if(!db[temp.row][temp.col].parents.includes(fcomps[i])){
+                        db[temp.row][temp.col].parents.push(fcomps[i]);
+
+                    }
+                    fcomps[i] = db[row][col].val;
+                }
+            }
+        }
+        console.log(db);
+        let a = "";
+        for(let i=0;i<fcomps.length;i++){
+            a+=fcomps[i];
+        }
+        let z = eval(a);
+        let element = "";
+        element += String.fromCharCode(Number($(lastClickedCell).attr('c-id')) + 65);
+        element += String(Number($(lastClickedCell).attr('r-id')) + 1);
+        
+        let {row,col} = getRowIDColID(element);
+        // console.log(row,col);
+        db[row][col].formula=formulaValue;
+        db[row][col].val = z;
+        $(lastClickedCell).html(z);
+    }
+}
 function getRowIDColID(element){
     let row = element.charCodeAt(0) - 65;
     let col = element.charCodeAt(1) - 49;

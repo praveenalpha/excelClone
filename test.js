@@ -12,5 +12,8 @@ function getRowIDColID(element){
     }
 }
 let{col,row} = getRowIDColID("A1");
-console.log(row,col);
+let a = row;
+let b = col;
+let x = getRowIDColID("A1");
+console.log(x.row,x.col);
 
