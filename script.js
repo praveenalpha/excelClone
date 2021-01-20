@@ -42,9 +42,15 @@ $(document).ready(function() {
         let row = $(this).attr('r-id');
         let col = $(this).attr('c-id');
         let value = $(this).text();
-        if(value)
+        if(value != db[row][col].val){
+            if(db[row][col].formula){
+                removeFormula();
+                $('.input-formula').val("");
+            }
             db[row][col].val = value;
-        // console.log(db);
+            let cellObj = db[row][col];
+            updateChildren(cellObj);
+        }
     })
     //input formula
     $('.input-formula').blur(function(){
@@ -75,7 +81,6 @@ function calculateFormula(){
                 }
             }
         }
-        console.log(db);
         let a = "";
         for(let i=0;i<fcomps.length;i++){
             a+=fcomps[i];
@@ -91,6 +96,58 @@ function calculateFormula(){
         db[row][col].val = z;
         $(lastClickedCell).html(z);
     }
+}
+function updateChildren(cellObject) {
+    console.log("inside update children");
+    for (let i = 0; i < cellObject.children.length; i++) {
+      let childName = cellObject.children[i];
+      let { row, col } = getRowIDColID(childName);
+      let childObject = db[row][col];
+      let newValue = solveFormula(childObject.formula);
+      db[row][col].val = newValue;
+      $(`.cell[r-id=${row}][c-id=${col}]`).html(newValue);
+    //   console.log(db);
+      updateChildren(childObject);
+    }
+  }
+function solveFormula(formula) {
+    console.log("inside solve formula");
+    let splitedFormula = formula.split(" ");
+    for (let i = 0; i < splitedFormula.length; i++) {
+      let fComp = splitedFormula[i];
+      let character = fComp[0];
+      if (character >= "A" && character <= "Z") {
+        let { row, col } = getRowIDColID(fComp);
+        
+        let value = db[row][col].val;
+        console.log(value);
+        formula = formula.replace(fComp, value);
+        // console.log(formula);
+      }
+    }
+    let val = eval(formula);
+    return val;
+}
+function removeFormula(){
+    let lsc = String.fromCharCode(Number($(lastClickedCell).attr('c-id')) + 65);
+    lsc += String(Number($(lastClickedCell).attr('r-id')) + 1);
+    let x = getRowIDColID(lsc);
+    let cellObj = db[x.row][x.col];
+    let toBeRemoved = cellObj.name;
+    let parents = cellObj.parents;
+    for (let i = 0; i < parents.length; i++) {
+      //["A1" , "A2"]
+      let y = getRowIDColID(parents[i]);
+      let parentCellObject = db[y.row][y.col];
+      let childs = parentCellObject.children;
+      let filteredArray = childs.filter(function (elem) {
+        return elem != toBeRemoved;
+      });
+      parentCellObject.children = filteredArray;
+    }
+    cellObj.value = "";
+    cellObj.formula = "";
+    cellObj.parents = [];
 }
 function getRowIDColID(element){
     let row = element.charCodeAt(0) - 65;
