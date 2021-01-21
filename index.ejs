@@ -1,34 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>excel</title>
-</head>
-<body>
-    <header>
-        <div class="header-contents">
-            <div class="menu">menu</div>
-            <div class="menu-options">menu-options</div>
-            <div class="formula">formula
-                <input class = "addressBar" type="text" value = "address bar" readonly>
-                <input class = "input-formula" type="text", placeholder="ex.( A1 + B1 )">
-            </div>
-        </div>
-    </header>
-    <div class="cells">
-        <% for(let i=0;i<100;i++) {  %>
-            <div class="row">
-                <% for(let j=0;j<26;j++) { %>
-                    <div class="cell" contenteditable="true" r-id=<%= i %> c-id = <%= j%> ></div>
-                    <% } %>
-            </div>
-            <% } %>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sheets App</title>
+
+    <!-- StyleSheets -->
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+
+  <body>
+    <!-- Menu -->
+    <div class="menu-container">
+      <div class="file" id="file">File</div>
+      <div class="home" id="home">Home</div>
     </div>
-    <footer>
-        <div class="footer">footer</div>
-    </footer>
-</body>
-<script src="./script.js"></script>
+    <div class="menu-options">
+      <div class="file-menu-options active">
+        <div class="new" id="new">New</div>
+        <div class="open" id="open">Open</div>
+        <div class="save" id="save">Save</div>
+      </div>
+      <div class="home-menu-options">
+        <div class="formatting">
+          <div class="font-selector">
+            <select name="font" id="font">
+              <option value="">Times New Roman</option>
+              <option value="">Courier New</option>
+              <option value="">Gill Sans</option>
+              <option value="">Impact</option>
+              <option value="">Franklin Gothic Medium</option>
+            </select>
+          </div>
+          <div class="font-styler">
+            <input type="button" id="bold" value="B" />
+            <input type="button" id="underline" value="U" />
+            <input type="button" id="italic" value="I" />
+          </div>
+        </div>
+        <div class="styling">
+          <div class="font-size">
+            <select name="fontsize" id="fontsize">
+              <option value="10">10</option>
+              <option value="10">12</option>
+              <option value="10">14</option>
+              <option value="10">16</option>
+            </select>
+          </div>
+          <div class="color">
+            <input type="color" name="fontcolor" id="fontcolor" />
+            <input type="color" name="cellcolor" id="cellcolor" />
+          </div>
+        </div>
+        <div class="alignment">
+          <input type="button" id="left" value="L" />
+          <input type="button" id="center" value="C" />
+          <input type="button" id="right" value="R" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Formula Bar -->
+    <div class="formula-tab">
+      Formula Tab
+      <input type="text" id="address" />
+      <input type="text" id="formula-input" />
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Top Left Cell -->
+      <div class="top-left-cell" id="top-left-cell"></div>
+
+      <!-- Top row -->
+      <div class="top-row" id="top-row">
+        <%for(let i=0 ; i<26 ; i++){%>
+        <div class="top-cell"><%= String.fromCharCode(i+65)%></div>
+        <%}%>
+      </div>
+
+      <!-- Left Column -->
+      <div class="left-col" id="left-col">
+        <%for(let i=1 ; i<=100 ; i++){%>
+        <div class="left-cell"><%= i%></div>
+        <%}%>
+      </div>
+
+      <!-- Cells -->
+      <div class="cells" id="cells">
+        <%for(let i=0 ; i<100 ; i++){%>
+        <div class="row">
+          <%for(let j=0 ; j<26 ; j++){%>
+          <div
+            class="cell"
+            id="cell"
+            c-id="<%=j%>"
+            r-id="<%=i%>"
+            contenteditable="true"
+          ></div>
+          <%}%>
+        </div>
+        <%}%>
+      </div>
+    </div>
+
+    <!-- Sheet Navigation -->
+    <div class="sheets">Sheets</div>
+  </body>
+
+  <!-- Scripts -->
+  <script src="./script.js"></script>
 </html>
