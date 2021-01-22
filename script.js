@@ -231,8 +231,13 @@ $(document).ready(function () {
     //id = file
     $(".file-menu-options").removeClass("active");
     $(".home-menu-options").removeClass("active");
+    $('#file').removeClass("selected-menu");
+    $('#home').removeClass("selected-menu");
+    $('#view').removeClass("selected-menu");
+    $('#help').removeClass("selected-menu");
+    $(`.${id}`).addClass("selected-menu");
     $(`.${id}-menu-options`).addClass("active");
-    if (id == "file") $(`.file-menu-options`).addClass("active");
+    // if (id == "file") $(`.file-menu-options`).addClass("active");
 
     // console.log(`.${id}-menu-options`);
   });
@@ -240,7 +245,9 @@ $(document).ready(function () {
   //Formula Bar Functions==================================================================
   $("#cells #cell").on("click", function () {
     let { rowID, colID } = getRowIdColId(this);
-
+    $(`.top-cell[id=top-row-${colID}]`).addClass("row-col-highlighter");
+    $(`.left-cell[id=left-cell-${rowID+1}]`).addClass("row-col-highlighter");
+    
     //form the address
     let address = String.fromCharCode(colID + 65) + (rowID + 1);
     let formula = db[rowID][colID].formula;
@@ -259,7 +266,9 @@ $(document).ready(function () {
     let value = $(this).text();
     // rowId and colId of cell
     let { rowID, colID } = getRowIdColId(this);
-
+    $(`.top-cell[id=top-row-${colID}]`).removeClass("row-col-highlighter");
+    $(`.left-cell[id=left-cell-${rowID+1}]`).removeClass("row-col-highlighter");
+    
     if (value != db[rowID][colID].value) {
       if (db[rowID][colID].formula) {
         removeFormula();
