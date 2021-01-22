@@ -64,14 +64,14 @@ $(document).ready(function () {
     // }
   });
   $("#open").on("click", function () {
-    console.log("clicked on open.");
+    // console.log("clicked on open.");
 
     let paths = dialog.showOpenDialogSync();
     let path = paths[0];
     let data = fs.readFileSync(path);
     data = JSON.parse(data);
     db = data;
-    console.log(db);
+    // console.log(db);
 
     let allRows = $("#cells").find(".row");
     let leftCols = $("#left-col .left-cell");
@@ -83,19 +83,18 @@ $(document).ready(function () {
           value,
           fontStyle,
           textAlignment,
-          fontColor,
           fontSize,
           fontFamily,
           leftColHeight,
+          textcolor,
+          background,
+          leftColHeight
         } = db[i][j];
+        //set fontStyle
         let { bold, underline, italic } = fontStyle;
         $(allCellsInARow[j]).html(value);
-        //set fontStyle
         $(allCellsInARow[j]).css("font-weight", bold ? "bold" : "normal");
-        $(allCellsInARow[j]).css(
-          "text-decoration",
-          underline ? "underline" : "none"
-        );
+        $(allCellsInARow[j]).css("text-decoration",underline ? "underline" : "none");
         $(allCellsInARow[j]).css("font-style", italic ? "italic" : "normal");
 
         //set textAlignment
@@ -108,9 +107,13 @@ $(document).ready(function () {
         }
 
         //set fontColor
+        $(allCellsInARow[j]).css("color", textcolor);
 
+        //set background color
+        $(allCellsInARow[j]).css("background-color", background);
+        
         //set fontSize
-
+        $(allCellsInARow[j]).css("font-size", fontSize);
         //set fontFamily
         $(allCellsInARow[j]).css("font-family", fontFamily);
 
@@ -186,7 +189,20 @@ $(document).ready(function () {
     textAlignment.center = false;
     textAlignment.right = true;
   });
-
+  //text color
+  $('#fontcolor').on("blur", function() {
+    let choosenColor = $(this).val();
+    let {rowID, colID} = getRowIdColId(lsc);
+    db[rowID][colID].textcolor = choosenColor;
+    $(`.cell[r-id=${rowID}][c-id=${colID}]`).css("color",`${choosenColor}`);
+  });
+  //background color
+  $('#cellcolor').on("blur", function(){
+    let choosenColor = $(this).val();
+    let {rowID, colID} = getRowIdColId(lsc);
+    db[rowID][colID].background = choosenColor;
+    $(`.cell[r-id=${rowID}][c-id=${colID}]`).css("background-color", choosenColor);
+  })
   //font family
   $("#font").on("click", function () {
     let { rowID, colID } = getRowIdColId(lsc);
@@ -197,7 +213,15 @@ $(document).ready(function () {
     cellObject.fontFamily = selectedFont;
     // console.log(cellObject.fontFamily);
   });
-
+  //font size
+  $("#fontsize").on("click", function(){
+    console.log($(this).val());
+    let choosenSize = Number($(this).val());
+    let {rowID, colID} = getRowIdColId(lsc);
+    db[rowID][colID].fontSize = choosenSize;
+    $(lsc).css("font-size", choosenSize);
+  })
+  
   //Content Scrolling
   $(".content").on("scroll", function () {
     //find the distance from top and left while scrolling

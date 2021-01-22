@@ -11,8 +11,9 @@
 
   <body>
     <!-- Menu -->
+    
     <div class="menu-container">
-      <div class="file" id="file">File</div>
+      <div class="file selected-menu" id="file">File</div>
       <div class="home" id="home">Home</div>
       <div class="view" id="view">View</div>
       <div class="help" id="help">Help</div>
@@ -43,21 +44,27 @@
         <div class="styling">
           <div class="font-size">
             <select name="fontsize" id="fontsize">
-              <option value="10">10</option>
-              <option value="10">12</option>
-              <option value="10">14</option>
-              <option value="10">16</option>
+              <option value="16">Font Size 10</option>
+              <option value="34">Font Size 12</option>
+              <option value="50">Font Size 14</option>
+              <option value="69">Font Size 16</option>
             </select>
           </div>
           <div class="color">
-            <input type="color" name="fontcolor" id="fontcolor" />
-            <input type="color" name="cellcolor" id="cellcolor" />
+            <input type="color" name="fontcolor" id="fontcolor"></input>
+            <input type="color" name="cellcolor" id="cellcolor"></input>
           </div>
         </div>
         <div class="alignment">
-          <input type="button" id="left" value="L" />
-          <input type="button" id="center" value="C" />
-          <input type="button" id="right" value="R" />
+          <div id="left">
+            <i class="fas fa-align-left"></i>
+          </div>
+          <div id="center">
+            <i class="fas fa-align-center"></i>
+          </div>
+          <div id="right">
+            <i class="fas fa-align-right"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -111,6 +118,6 @@
   </body>
 
   <!-- Scripts -->
-  
+  <script src="https://kit.fontawesome.com/cc52f1c2ec.js" crossorigin="anonymous"></script>
   <script src="./script.js"></script>
 </html>
