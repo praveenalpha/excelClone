@@ -87,8 +87,7 @@ $(document).ready(function () {
           fontFamily,
           leftColHeight,
           textcolor,
-          background,
-          leftColHeight
+          background
         } = db[i][j];
         //set fontStyle
         let { bold, underline, italic } = fontStyle;
@@ -118,9 +117,9 @@ $(document).ready(function () {
         $(allCellsInARow[j]).css("font-family", fontFamily);
 
         //find max left column height
-        if (leftColHeight > maxLeftColHeight) {
-          maxLeftColHeight = leftColHeight;
-        }
+        // if (leftColHeight > maxLeftColHeight) {
+        //   maxLeftColHeight = leftColHeight;
+        // }
       }
 
       //set left column height
@@ -215,11 +214,27 @@ $(document).ready(function () {
   });
   //font size
   $("#fontsize").on("click", function(){
-    console.log($(this).val());
     let choosenSize = Number($(this).val());
     let {rowID, colID} = getRowIdColId(lsc);
     db[rowID][colID].fontSize = choosenSize;
     $(lsc).css("font-size", choosenSize);
+
+    // console.log($(this).val());
+    // get the current height of cell
+    let ht = $(lsc).height();
+    //get row id of its corresponding left cell
+    let leftCellId = $(lsc).attr("r-id");
+    //get that left cell from the UI
+    let allLeftCells = $("#left-col .left-cell");
+    let leftCell = allLeftCells[leftCellId];
+    //make the height of left cell same
+    $(leftCell).height(ht);
+    //update left cell height in db
+    // let { rowID, colID } = getRowIdColId(lsc);
+    let cellObj = db[rowID][colID];
+    cellObj.leftColHeight = ht;
+    console.log(ht);
+
   })
   
   //Content Scrolling
@@ -247,6 +262,7 @@ $(document).ready(function () {
     let { rowID, colID } = getRowIdColId(this);
     let cellObj = db[rowID][colID];
     cellObj.leftColHeight = ht;
+    console.log(ht);
   });
 
   // Toggle between file and menu options
