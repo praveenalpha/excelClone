@@ -64,14 +64,14 @@ $(document).ready(function () {
     // }
   });
   $("#open").on("click", function () {
-    // console.log("clicked on open.");
+    console.log("clicked on open.");
 
     let paths = dialog.showOpenDialogSync();
     let path = paths[0];
     let data = fs.readFileSync(path);
     data = JSON.parse(data);
     db = data;
-    // console.log(db);
+    console.log(db);
 
     let allRows = $("#cells").find(".row");
     let leftCols = $("#left-col .left-cell");
@@ -83,17 +83,19 @@ $(document).ready(function () {
           value,
           fontStyle,
           textAlignment,
+          fontColor,
           fontSize,
           fontFamily,
           leftColHeight,
-          textcolor,
-          background
         } = db[i][j];
-        //set fontStyle
         let { bold, underline, italic } = fontStyle;
         $(allCellsInARow[j]).html(value);
+        //set fontStyle
         $(allCellsInARow[j]).css("font-weight", bold ? "bold" : "normal");
-        $(allCellsInARow[j]).css("text-decoration",underline ? "underline" : "none");
+        $(allCellsInARow[j]).css(
+          "text-decoration",
+          underline ? "underline" : "none"
+        );
         $(allCellsInARow[j]).css("font-style", italic ? "italic" : "normal");
 
         //set textAlignment
@@ -106,20 +108,16 @@ $(document).ready(function () {
         }
 
         //set fontColor
-        $(allCellsInARow[j]).css("color", textcolor);
 
-        //set background color
-        $(allCellsInARow[j]).css("background-color", background);
-        
         //set fontSize
-        $(allCellsInARow[j]).css("font-size", fontSize);
+
         //set fontFamily
         $(allCellsInARow[j]).css("font-family", fontFamily);
 
         //find max left column height
-        // if (leftColHeight > maxLeftColHeight) {
-        //   maxLeftColHeight = leftColHeight;
-        // }
+        if (leftColHeight > maxLeftColHeight) {
+          maxLeftColHeight = leftColHeight;
+        }
       }
 
       //set left column height
@@ -188,20 +186,7 @@ $(document).ready(function () {
     textAlignment.center = false;
     textAlignment.right = true;
   });
-  //text color
-  $('#fontcolor').on("blur", function() {
-    let choosenColor = $(this).val();
-    let {rowID, colID} = getRowIdColId(lsc);
-    db[rowID][colID].textcolor = choosenColor;
-    $(`.cell[r-id=${rowID}][c-id=${colID}]`).css("color",`${choosenColor}`);
-  });
-  //background color
-  $('#cellcolor').on("blur", function(){
-    let choosenColor = $(this).val();
-    let {rowID, colID} = getRowIdColId(lsc);
-    db[rowID][colID].background = choosenColor;
-    $(`.cell[r-id=${rowID}][c-id=${colID}]`).css("background-color", choosenColor);
-  })
+
   //font family
   $("#font").on("click", function () {
     let { rowID, colID } = getRowIdColId(lsc);
@@ -212,31 +197,7 @@ $(document).ready(function () {
     cellObject.fontFamily = selectedFont;
     // console.log(cellObject.fontFamily);
   });
-  //font size
-  $("#fontsize").on("click", function(){
-    let choosenSize = Number($(this).val());
-    let {rowID, colID} = getRowIdColId(lsc);
-    db[rowID][colID].fontSize = choosenSize;
-    $(lsc).css("font-size", choosenSize);
 
-    // console.log($(this).val());
-    // get the current height of cell
-    let ht = $(lsc).height();
-    //get row id of its corresponding left cell
-    let leftCellId = $(lsc).attr("r-id");
-    //get that left cell from the UI
-    let allLeftCells = $("#left-col .left-cell");
-    let leftCell = allLeftCells[leftCellId];
-    //make the height of left cell same
-    $(leftCell).height(ht);
-    //update left cell height in db
-    // let { rowID, colID } = getRowIdColId(lsc);
-    let cellObj = db[rowID][colID];
-    cellObj.leftColHeight = ht;
-    console.log(ht);
-
-  })
-  
   //Content Scrolling
   $(".content").on("scroll", function () {
     //find the distance from top and left while scrolling
@@ -262,7 +223,6 @@ $(document).ready(function () {
     let { rowID, colID } = getRowIdColId(this);
     let cellObj = db[rowID][colID];
     cellObj.leftColHeight = ht;
-    console.log(ht);
   });
 
   // Toggle between file and menu options
@@ -271,23 +231,16 @@ $(document).ready(function () {
     //id = file
     $(".file-menu-options").removeClass("active");
     $(".home-menu-options").removeClass("active");
-    $('#file').removeClass("selected-menu");
-    $('#home').removeClass("selected-menu");
-    $('#view').removeClass("selected-menu");
-    $('#help').removeClass("selected-menu");
-    $(`.${id}`).addClass("selected-menu");
     $(`.${id}-menu-options`).addClass("active");
-    // if (id == "file") $(`.file-menu-options`).addClass("active");
+    if (id == "file") $(`.file-menu-options`).addClass("active");
 
-    // console.log(`.${id}-menu-options`);
+    console.log(`.${id}-menu-options`);
   });
 
   //Formula Bar Functions==================================================================
   $("#cells #cell").on("click", function () {
     let { rowID, colID } = getRowIdColId(this);
-    $(`.top-cell[id=top-row-${colID}]`).addClass("row-col-highlighter");
-    $(`.left-cell[id=left-cell-${rowID+1}]`).addClass("row-col-highlighter");
-    
+
     //form the address
     let address = String.fromCharCode(colID + 65) + (rowID + 1);
     let formula = db[rowID][colID].formula;
@@ -306,9 +259,7 @@ $(document).ready(function () {
     let value = $(this).text();
     // rowId and colId of cell
     let { rowID, colID } = getRowIdColId(this);
-    $(`.top-cell[id=top-row-${colID}]`).removeClass("row-col-highlighter");
-    $(`.left-cell[id=left-cell-${rowID+1}]`).removeClass("row-col-highlighter");
-    
+
     if (value != db[rowID][colID].value) {
       if (db[rowID][colID].formula) {
         removeFormula();
